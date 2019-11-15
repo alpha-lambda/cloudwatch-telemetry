@@ -1,0 +1,80 @@
+version: 2.0
+
+references:
+
+  workspace_root: &workspace_root
+    ./
+
+  node_container: &node_container
+    docker:
+      - image: circleci/node:10
+
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+  run_always: &run_always
+    filters:
+      tags:
+        only: /.*/
+
+  run_on_master: &run_on_master
+    filters:
+      branches:
+        only: master
+jobs:
+  dependencies:
+    <<: *node_container
+    steps:
+      - checkout
+      - run: npm ci
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - node_modules
+  lint:
+    <<: *node_container
+    steps:
+      - checkout
+      - *attach_workspace
+      - run: npm run lint
+  unit_test:
+    <<: *node_container
+    steps:
+      - checkout
+      - *attach_workspace
+      - run: npm run test:unit
+      - run: npm run coverage:coveralls
+  integration_test:
+    <<: *node_container
+    steps:
+      - checkout
+      - *attach_workspace
+      - run: npm run test:integration
+  publish:
+    <<: *node_container
+    steps:
+      - checkout
+      - *attach_workspace
+      - run: npx publish
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - dependencies:
+          <<: *run_always
+          context: ci-read
+      - lint:
+          <<: *run_always
+          requires: [ 'dependencies' ]
+      - unit_test:
+          <<: *run_always
+          requires: [ 'dependencies', 'lint' ]
+      - integration_test:
+          <<: *run_always
+          requires: [ 'dependencies', 'lint' ]
+      - publish:
+          <<: *run_on_master
+          context: ci-write
+          requires: [ 'unit_test', 'integration_test' ]

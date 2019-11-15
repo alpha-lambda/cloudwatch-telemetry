@@ -1,0 +1,152 @@
+service: cw-telemetry
+
+plugins:
+  - serverless-plugin-aws-alerts
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
+  - serverless-prune-plugin
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  environment:
+    LOG_LEVEL: ${opt:log-level, "info"}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cloudwatch:PutMetricData
+      Resource: "*"
+
+package:
+  exclude:
+    - coverage/**
+
+custom:
+  alerts:
+    nameTemplate: $[functionName]-$[metricName]
+    topics:
+      alarm: ${opt:alarmAction, ""}
+      insufficientData: ${opt:insufficientDataAction, ""}
+      ok: ${opt:okAction, ""}
+    definitions:
+      functionErrors:
+        threshold: 10
+        comparisonOperator: GreaterThanThreshold
+      functionErrorsConsistently:
+        namespace: AWS/Lambda
+        metric: Errors
+        threshold: 0
+        statistic: Maximum
+        period: 60
+        evaluationPeriods: 5
+        comparisonOperator: GreaterThanThreshold
+      functionIteratorAge:
+        namespace: AWS/Lambda
+        metric: IteratorAge
+        threshold: 300000 # 5 mins
+        statistic: Maximum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanThreshold
+      logErrors:
+        metric: LogErrors
+        threshold: 5
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanThreshold
+        pattern: "{$.level > 40}"
+      logWarnings:
+        metric: LogWarnings
+        threshold: 0
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 1
+        comparisonOperator: GreaterThanThreshold
+        pattern: "{$.level = 40}"
+    function:
+      - functionErrors
+      - functionErrorsConsistently
+      - functionIteratorAge
+      - logWarnings
+      - logErrors
+  namespace: ${self:service}-${self:custom.stage}
+  prune:
+    automatic: true
+    number: 3
+  region: ${opt:region, self:provider.region}
+  serviceRoleName: ${self:custom.namespace}-${self:custom.region}-role
+  stage: ${opt:stage, self:provider.stage}
+
+functions:
+  datapointsProcessor:
+    handler: src/datapoints-processor.handler
+    memorySize: 512
+    timeout: 10
+    environment:
+      SUPPRESS_ERRORS: false
+    events:
+      - stream:
+          type: kinesis
+          startingPosition: TRIM_HORIZON
+          arn:
+            Fn::GetAtt:
+              - IngestionStream
+              - Arn
+          batchSize: ${opt:batchSize, "1000"}
+
+resources:
+  Resources:
+    IngestionStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        Name: ${self:custom.namespace}-ingestion-stream
+        RetentionPeriodHours: ${opt:retentionHours, "24"}
+        ShardCount: ${opt:shardCount, "1"}
+    ServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:custom.serviceRoleName}
+        AssumeRolePolicyDocument:
+          Statement:
+            - Effect: Allow
+              Action: sts:AssumeRole
+              Principal:
+                Service:
+                  - logs.${self:custom.region}.amazonaws.com
+        Policies:
+          - PolicyName: root
+            PolicyDocument:
+              Statement:
+                - Effect: Allow
+                  Action: kinesis:PutRecord
+                  Resource:
+                    Fn::GetAtt:
+                      - IngestionStream
+                      - Arn
+                - Effect: Allow
+                  Action: iam:PassRole
+                  Resource:
+                    Fn::Join:
+                      - ":"
+                      -
+                        - "arn:aws:iam:"
+                        - Ref: AWS::AccountId
+                        - role/${self:custom.serviceRoleName}
+  Outputs:
+    IngestionStreamArn:
+      Description: The ARN for the Kinesis logs stream
+      Value:
+        Fn::GetAtt:
+          - IngestionStream
+          - Arn
+      Export:
+        Name: ${self:custom.namespace}-ingestion-stream-arn
+    ServiceRoleArn:
+      Description: The ARN for the IAM role
+      Value:
+        Fn::GetAtt:
+          - ServiceRole
+          - Arn
+      Export:
+        Name: ${self:custom.namespace}-service-role-arn

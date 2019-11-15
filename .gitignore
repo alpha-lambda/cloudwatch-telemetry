@@ -1,0 +1,15 @@
+node_modules/
+coverage/
+.nyc_output/
+.serverless/
+.terraform/
+git.json
+.DS_Store
+.npmrc
+*.log
+*.swp
+*.tfplan
+*.tfstate
+*.tfstate.backup
+npm-shrinkwrap.json
+sonar-coverage.info

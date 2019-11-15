@@ -64,7 +64,6 @@ workflows:
     jobs:
       - dependencies:
           <<: *run_always
-          context: ci-read
       - lint:
           <<: *run_always
           requires: [ 'dependencies' ]
@@ -76,5 +75,5 @@ workflows:
           requires: [ 'dependencies', 'lint' ]
       - publish:
           <<: *run_on_master
-          context: ci-write
+          context: ci-publish
           requires: [ 'unit_test', 'integration_test' ]

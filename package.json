@@ -1,6 +1,6 @@
 {
   "name": "@alpha-lambda/cloudwatch-telemetry",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Store custom CloudWatch metrics in a cost-effective way",
   "main": "src/DatapointsCollector.js",
   "scripts": {

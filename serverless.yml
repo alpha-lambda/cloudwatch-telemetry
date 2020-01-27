@@ -35,8 +35,9 @@ custom:
       functionErrorsConsistently:
         namespace: AWS/Lambda
         metric: Errors
+        nameTemplate: ${self:custom.alerts.nameTemplate}-Consistently
         threshold: 0
-        statistic: Maximum
+        statistic: Sum
         period: 60
         evaluationPeriods: 5
         comparisonOperator: GreaterThanThreshold

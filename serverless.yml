@@ -8,9 +8,10 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs14.x
   environment:
     LOG_LEVEL: ${opt:log-level, "info"}
+  lambdaHashingVersion: 20201221
   logRetentionInDays: 30
   iamRoleStatements:
     - Effect: Allow
@@ -19,8 +20,8 @@ provider:
       Resource: "*"
 
 package:
-  exclude:
-    - coverage/**
+  patterns:
+    - '!coverage/**'
 
 custom:
   alerts:

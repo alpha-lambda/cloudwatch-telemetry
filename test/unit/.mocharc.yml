@@ -1,0 +1,7 @@
+require:
+  - test/support
+reporter: spec
+ui: bdd
+recursive: true
+timeout: 5000
+exit: true

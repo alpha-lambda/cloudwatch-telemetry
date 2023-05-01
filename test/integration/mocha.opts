@@ -1,6 +1,0 @@
---require test/support
---reporter spec
---ui bdd
---recursive
---timeout 20000
---exit

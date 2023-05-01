@@ -16,7 +16,8 @@ CloudWatch logs with datapoints --> Kinesis Stream --> Lambda function --> Cloud
 
 To deploy an instance of the app, run the following commands:
 ```shell
-npm install
+nvm use
+npm ci
 npm run deploy -- [--stage STAGE] [--region REGION] [--alarmAction ALARM_ACTION] [--insufficientDataAction INSUFFICIENT_DATA_ACTION] [--okAction OK_ACTION] [--logLevel LOG_LEVEL] [--batchSize BATCH_SIZE] [--retentionHours RETENTION_HOURS] [--shardCount SHARD_COUNT]
 ```
 
@@ -34,7 +35,8 @@ npm run deploy -- [--stage STAGE] [--region REGION] [--alarmAction ALARM_ACTION]
 
 To remove an instance of the app, run the following commands:
 ```shell
-npm install
+nvm use
+npm ci
 npm run remove -- [--stage STAGE] [--region REGION]
 ```
 

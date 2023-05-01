@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const uuid = require('uuid');
 const sinon = require('sinon');
 
-const DatapointsCollector = require('../../');
+const DatapointsCollector = require('../..');
 const setupTestHarness = require('../test-utils/setup-test-harness');
 
 describe('DatapointsCollector', function() {
@@ -14,7 +14,7 @@ describe('DatapointsCollector', function() {
 
   beforeEach(function() {
     this.timeNow = Date.now();
-    this.clock = sinon.useFakeTimers(this.timeNow);
+    this.clock = this.sandbox.useFakeTimers(this.timeNow);
   });
 
   describe('#constructor', function() {

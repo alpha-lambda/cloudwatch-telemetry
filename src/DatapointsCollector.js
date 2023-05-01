@@ -2,7 +2,6 @@
 
 const assert = require('assert');
 const chunk = require('lodash.chunk');
-const yn = require('yn');
 
 const DEFAULT_FLUSH_FREQUENCY = 20000;
 const DEFAULT_MAX_DATAPOINTS_PER_FLUSH = 500;
@@ -37,17 +36,24 @@ const UNITS = {
 };
 
 class DatapointsCollector {
-  constructor(options = {}) {
-    assert(options.log, 'missing log');
-    assert(options.namespace, 'missing namespace');
+  constructor({
+    auto = false,
+    enabled = true,
+    flushFrequency = DEFAULT_FLUSH_FREQUENCY,
+    log,
+    maxDatapointsPerFlush = DEFAULT_MAX_DATAPOINTS_PER_FLUSH,
+    namespace
+  } = {}) {
+    assert(log, 'missing log');
+    assert(namespace, 'missing namespace');
 
-    this.log = options.log;
-    this.auto = options.auto || false;
-    this.flushFrequency = options.flushFrequency || DEFAULT_FLUSH_FREQUENCY;
-    this.maxDatapointsPerFlush = options.maxDatapointsPerFlush || DEFAULT_MAX_DATAPOINTS_PER_FLUSH;
-    this.namespace = options.namespace;
+    this.log = log;
+    this.auto = auto;
+    this.flushFrequency = flushFrequency;
+    this.maxDatapointsPerFlush = maxDatapointsPerFlush;
+    this.namespace = namespace;
     this._datapoints = [];
-    this._enabled = yn(options.enabled, { default: true });
+    this._enabled = enabled;
     this._stopped = !(this._enabled && this.auto);
 
     this._setupFlushTimer();

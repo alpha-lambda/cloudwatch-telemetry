@@ -39,8 +39,7 @@
     "ajv": "^8.12.0",
     "aws-sdk": "^2.1368.0",
     "lodash.chunk": "^4.2.0",
-    "pino": "^5.13.6",
-    "yn": "^3.1.1"
+    "pino": "^5.13.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",

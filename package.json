@@ -62,6 +62,6 @@
     "serverless-plugin-include-dependencies": "^5.0.0",
     "serverless-prune-plugin": "^2.0.2",
     "sinon": "^11.1.2",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   }
 }

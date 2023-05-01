@@ -5,10 +5,10 @@
   "main": "src/DatapointsCollector.js",
   "scripts": {
     "coverage:coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "deploy": "sls deploy",
+    "deploy": "./sls.js deploy",
     "lint": "eslint .",
-    "package": "sls package",
-    "remove": "sls remove",
+    "package": "./sls.js package",
+    "remove": "./sls.js remove",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "env-cmd -f test/.env --no-override nyc mocha --config test/unit/.mocharc.yml test/unit",
     "test:integration": "env-cmd -f test/.env --no-override mocha --config test/integration/.mocharc.yml test/integration"
@@ -39,7 +39,9 @@
     "ajv": "^8.12.0",
     "aws-sdk": "^2.1368.0",
     "lodash.chunk": "^4.2.0",
-    "pino": "^8.11.0"
+    "minimist": "^1.2.8",
+    "pino": "^8.11.0",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "chai": "^4.3.7",

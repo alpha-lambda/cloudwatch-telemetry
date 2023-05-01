@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const uuid = require('uuid');
 const sinon = require('sinon');
 
-const DatapointsCollector = require('../../');
+const DatapointsCollector = require('../..');
 const setupTestHarness = require('../test-utils/setup-test-harness');
 
 describe('DatapointsCollector', function() {

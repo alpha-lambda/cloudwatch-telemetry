@@ -8,6 +8,7 @@
     "deploy": "./sls.js deploy",
     "lint": "eslint .",
     "package": "./sls.js package",
+    "posttest": "npm run lint",
     "remove": "./sls.js remove",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "env-cmd -f test/.env --no-override nyc mocha --config test/unit/.mocharc.yml test/unit",

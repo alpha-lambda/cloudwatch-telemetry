@@ -35,6 +35,7 @@ npm run deploy -- [--stage STAGE] [--region REGION] [--alarmAction ALARM_ACTION]
 
 To remove an instance of the app, run the following commands:
 ```shell
+nvm use
 npm ci
 npm run remove -- [--stage STAGE] [--region REGION]
 ```

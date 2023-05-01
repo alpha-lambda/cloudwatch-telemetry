@@ -41,9 +41,9 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data should have required property \'Records\', '
-            + 'data should be array, '
-            + 'data should match exactly one schema in oneOf'
+            'data must have required property \'Records\', '
+            + 'data must be array, '
+            + 'data must match exactly one schema in oneOf'
           );
         });
     });
@@ -57,9 +57,9 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data.Records[0] should have required property \'kinesis\', '
-            + 'data should be array, '
-            + 'data should match exactly one schema in oneOf'
+            'data/Records/0 must have required property \'kinesis\', '
+            + 'data must be array, '
+            + 'data must match exactly one schema in oneOf'
           );
         });
     });
@@ -75,9 +75,9 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data.Records[0].kinesis should have required property \'data\', '
-            + 'data should be array, '
-            + 'data should match exactly one schema in oneOf'
+            'data/Records/0/kinesis must have required property \'data\', '
+            + 'data must be array, '
+            + 'data must match exactly one schema in oneOf'
           );
         });
     });
@@ -101,10 +101,10 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0] should have required property \'name\', '
-            + 'data[0] should have required property \'namespace\', '
-            + 'data[0] should have required property \'dimensions\', '
-            + 'data[0] should have required property \'points\''
+            'data/0 must have required property \'name\', '
+            + 'data/0 must have required property \'namespace\', '
+            + 'data/0 must have required property \'dimensions\', '
+            + 'data/0 must have required property \'points\''
           );
         });
     });
@@ -123,11 +123,11 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0].name should NOT be shorter than 1 characters, '
-            + 'data[0].namespace should NOT be shorter than 1 characters, '
-            + 'data[0].dimensions should NOT have fewer than 1 properties, '
-            + 'data[0].points should be array, '
-            + 'data[0].unit should be equal to one of the allowed values'
+            'data/0/name must NOT have fewer than 1 characters, '
+            + 'data/0/namespace must NOT have fewer than 1 characters, '
+            + 'data/0/dimensions must NOT have fewer than 1 properties, '
+            + 'data/0/points must be array, '
+            + 'data/0/unit must be equal to one of the allowed values'
           );
         });
     });
@@ -152,7 +152,7 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0] should NOT have additional properties'
+            'data/0 must NOT have additional properties'
           );
         });
     });
@@ -173,8 +173,8 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0].points[0] should have required property \'value\', ' +
-            'data[0].points[0] should have required property \'timestamp\''
+            'data/0/points/0 must have required property \'value\', ' +
+            'data/0/points/0 must have required property \'timestamp\''
           );
         });
     });
@@ -198,8 +198,8 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0].points[0].value should be number, ' +
-            'data[0].points[0].timestamp should be integer'
+            'data/0/points/0/value must be number, ' +
+            'data/0/points/0/timestamp must be integer'
           );
         });
     });
@@ -224,7 +224,7 @@ describe('datapoints-processor', function() {
         .event(event)
         .expectReject((err) => {
           expect(err.message).to.be.equal(
-            'data[0].points[0] should NOT have additional properties'
+            'data/0/points/0 must NOT have additional properties'
           );
         });
     });

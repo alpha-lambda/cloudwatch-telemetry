@@ -14,7 +14,7 @@ describe('DatapointsCollector', function() {
 
   beforeEach(function() {
     this.timeNow = Date.now();
-    this.clock = sinon.useFakeTimers(this.timeNow);
+    this.clock = this.sandbox.useFakeTimers(this.timeNow);
   });
 
   describe('#constructor', function() {

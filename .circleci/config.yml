@@ -7,7 +7,7 @@ references:
 
   node_container: &node_container
     docker:
-      - image: node:18-slim
+      - image: node:20-slim
 
   attach_workspace: &attach_workspace
     attach_workspace:
@@ -44,7 +44,6 @@ jobs:
       - checkout
       - *attach_workspace
       - run: npm run test:unit
-      - run: npm run coverage:coveralls
   integration_test:
     <<: *node_container
     steps:

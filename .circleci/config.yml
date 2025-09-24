@@ -7,7 +7,7 @@ references:
 
   node_container: &node_container
     docker:
-      - image: node:18-slim
+      - image: node:22-slim
 
   attach_workspace: &attach_workspace
     attach_workspace:
